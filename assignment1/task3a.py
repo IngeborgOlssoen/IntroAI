@@ -1,6 +1,6 @@
 import numpy as np
-import utils
-from task2a import pre_process_images
+import assignment1.utils as utils
+from assignment1.task2a import pre_process_images
 np.random.seed(1)
 
 
@@ -18,14 +18,14 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     raise NotImplementedError
 
 
-class SoftmaxModel:
+class SoftmaxModel: #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
 
     def __init__(self, l2_reg_lambda: float):
         # Define number of input nodes
-        self.I = None
+        self.I = 785
 
         # Define number of output nodes
-        self.num_outputs = None
+        self.num_outputs = 1
         self.w = np.zeros((self.I, self.num_outputs))
         self.grad = None
 
@@ -39,7 +39,11 @@ class SoftmaxModel:
             y: output of model with shape [batch size, num_outputs]
         """
         # TODO implement this function (Task 3a)
-        return None
+
+        exp_X= np.exp(X-np.max(X))
+        softmax_probs= exp_X/ np.sum(exp_X,axis=0)
+        
+        return softmax_probs
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -72,7 +76,16 @@ def one_hot_encode(Y: np.ndarray, num_classes: int):
         Y: shape [Num examples, num classes]
     """
     # TODO implement this function (Task 3a)
-    raise NotImplementedError
+       # Create an identity matrix with dimensions num_classes
+    one_hot_matrix = np.eye(num_classes)
+    
+    # Use integer indexing to map the values in Y to one-hot vectors
+    Y_one_hot = one_hot_matrix[Y.reshape(-1)].astype(int)
+    
+    return Y_one_hot
+
+
+  
 
 
 def gradient_approximation_test(model: SoftmaxModel, X: np.ndarray, Y: np.ndarray):
